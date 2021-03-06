@@ -21,7 +21,15 @@ export default function LoggedOutNav() {
         component={Welcome}
       />
       <Stack.Screen name="LogIn" component={LogIn} />
-      <Stack.Screen name="CreateAccount" component={CreateAccount} />
+      <Stack.Screen
+        options={{
+          headerTitle: false,
+          headerTransparent: true,
+          headerTintColor: "white",
+        }}
+        name="CreateAccount"
+        component={CreateAccount}
+      />
     </Stack.Navigator>
   );
 }
