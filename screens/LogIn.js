@@ -1,13 +1,23 @@
 import React from "react";
 import { Text, View, TouchableOpacity } from "react-native";
+import AuthLayout from "../components/auth/AuthLayout";
+import { TextInput } from "../components/auth/AuthShared";
 
 export default function Login({ navigation }) {
   return (
-    <View>
-      <Text>Login</Text>
-      <TouchableOpacity onPress={() => navigation.navigate("CreateAccount")}>
-        <Text>Go to Create Account</Text>
-      </TouchableOpacity>
-    </View>
+    <AuthLayout>
+      <TextInput
+        placeholder="Username"
+        returnKeyType="next"
+        placeholderTextColor={"rgba(255, 255, 255, 0.6)"}
+      />
+      <TextInput
+        placeholder="Password"
+        secureTextEntry
+        returnKeyType="done"
+        lastOne={true}
+        placeholderTextColor={"rgba(255, 255, 255, 0.6)"}
+      />
+    </AuthLayout>
   );
 }
