@@ -18,7 +18,7 @@ export default function Welcome({ navigation }) {
   return (
     <AuthLayout>
       <AuthButton
-        text="Crate New Account"
+        text="Create New Account"
         disabled={false}
         onPress={goToCreateAccount}
       />
