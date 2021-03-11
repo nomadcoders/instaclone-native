@@ -1,13 +1,25 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import PropTypes from "prop-types";
+import { useNavigation } from "@react-navigation/native";
 import styled from "styled-components/native";
-import { useWindowDimensions } from "react-native";
+import { Image, useWindowDimensions } from "react-native";
+import { TouchableOpacity } from "react-native-gesture-handler";
 
 const Container = styled.View``;
-const Header = styled.View``;
-const UserAvatar = styled.Image``;
+const Header = styled.TouchableOpacity`
+  padding: 10px;
+  flex-direction: row;
+  align-items: center;
+`;
+const UserAvatar = styled.Image`
+  margin-right: 10px;
+  width: 25px;
+  height: 25px;
+  border-radius: 12.5;
+`;
 const Username = styled.Text`
   color: white;
+  font-weight: 600;
 `;
 const File = styled.Image``;
 const Actions = styled.View``;
@@ -21,17 +33,25 @@ const Likes = styled.Text`
 `;
 
 function Photo({ id, user, caption, file, isLiked, likes }) {
+  const navigation = useNavigation();
   const { width, height } = useWindowDimensions();
+  const [imageHeight, setImageHeight] = useState(height - 450);
+  useEffect(() => {
+    Image.getSize(file, (width, height) => {
+      setImageHeight(height / 3);
+    });
+  }, [file]);
   return (
     <Container>
-      <Header>
-        <UserAvatar />
+      <Header onPress={() => navigation.navigate("Profile")}>
+        <UserAvatar resizeMode="cover" source={{ uri: user.avatar }} />
         <Username>{user.username}</Username>
       </Header>
       <File
+        resizeMode="cover"
         style={{
           width,
-          height: height - 500,
+          height: imageHeight,
         }}
         source={{ uri: file }}
       />
@@ -41,7 +61,9 @@ function Photo({ id, user, caption, file, isLiked, likes }) {
       </Actions>
       <Likes>{likes === 1 ? "1 like" : `${likes} likes`}</Likes>
       <Caption>
-        <Username>{user.username}</Username>
+        <TouchableOpacity onPress={() => navigation.navigate("Profile")}>
+          <Username>{user.username}</Username>
+        </TouchableOpacity>
         <CaptionText>{caption}</CaptionText>
       </Caption>
     </Container>
