@@ -35,7 +35,8 @@
     "react-native-tab-view": "^2.16.0",
     "react-native-web": "~0.13.12",
     "styled-components": "^5.2.1",
-    "expo-media-library": "~10.0.0"
+    "expo-media-library": "~10.0.0",
+    "expo-camera": "~9.1.0"
   },
   "devDependencies": {
     "@babel/core": "~7.9.0"
