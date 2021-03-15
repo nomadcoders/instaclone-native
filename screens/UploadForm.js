@@ -44,8 +44,27 @@ const HeaderRightText = styled.Text`
 `;
 
 export default function UploadForm({ route, navigation }) {
-  const [uploadPhotoMutation, { loading, error }] = useMutation(
-    UPLOAD_PHOTO_MUTATION
+  const updateUploadPhoto = (cache, result) => {
+    const {
+      data: { uploadPhoto },
+    } = result;
+    if (uploadPhoto.id) {
+      cache.modify({
+        id: "ROOT_QUERY",
+        fields: {
+          seeFeed(prev) {
+            return [uploadPhoto, ...prev];
+          },
+        },
+      });
+      navigation.navigate("Tabs");
+    }
+  };
+  const [uploadPhotoMutation, { loading }] = useMutation(
+    UPLOAD_PHOTO_MUTATION,
+    {
+      update: updateUploadPhoto,
+    }
   );
   const HeaderRight = () => (
     <TouchableOpacity onPress={handleSubmit(onValid)}>
@@ -78,7 +97,6 @@ export default function UploadForm({ route, navigation }) {
       },
     });
   };
-  console.log(error);
   return (
     <DismissKeyboard>
       <Container>
