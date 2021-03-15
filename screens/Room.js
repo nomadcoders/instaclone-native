@@ -1,4 +1,10 @@
-import { gql, useMutation, useQuery, useSubscription } from "@apollo/client";
+import {
+  gql,
+  useApolloClient,
+  useMutation,
+  useQuery,
+  useSubscription,
+} from "@apollo/client";
 import React, { useEffect } from "react";
 import { FlatList, KeyboardAvoidingView, View } from "react-native";
 import ScreenLayout from "../components/ScreenLayout";
@@ -143,6 +149,38 @@ export default function Room({ route, navigation }) {
       id: route?.params?.id,
     },
   });
+  const client = useApolloClient();
+  const updateQuery = (prevQuery, options) => {
+    const {
+      subscriptionData: {
+        data: { roomUpdates: message },
+      },
+    } = options;
+    if (message.id) {
+      const messageFragment = client.cache.writeFragment({
+        fragment: gql`
+          fragment NewMessage on Message {
+            id
+            payload
+            user {
+              username
+              avatar
+            }
+            read
+          }
+        `,
+        data: message,
+      });
+      client.cache.modify({
+        id: `Room:${route.params.id}`,
+        fields: {
+          messages(prev) {
+            return [...prev, messageFragment];
+          },
+        },
+      });
+    }
+  };
   useEffect(() => {
     if (data?.seeRoom) {
       subscribeToMore({
@@ -150,6 +188,7 @@ export default function Room({ route, navigation }) {
         variables: {
           id: route?.params?.id,
         },
+        updateQuery,
       });
     }
   }, [data]);
