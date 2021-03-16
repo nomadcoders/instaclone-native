@@ -157,7 +157,7 @@ export default function Room({ route, navigation }) {
       },
     } = options;
     if (message.id) {
-      const messageFragment = client.cache.writeFragment({
+      const incomingMessage = client.cache.writeFragment({
         fragment: gql`
           fragment NewMessage on Message {
             id
@@ -175,7 +175,13 @@ export default function Room({ route, navigation }) {
         id: `Room:${route.params.id}`,
         fields: {
           messages(prev) {
-            return [...prev, messageFragment];
+            const existingMessage = prev.find(
+              (aMessage) => aMessage.__ref === incomingMessage.__ref
+            );
+            if (existingMessage) {
+              return prev;
+            }
+            return [...prev, incomingMessage];
           },
         },
       });
